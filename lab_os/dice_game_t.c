@@ -24,6 +24,7 @@ typedef struct
 
 
 void* roll_dice_model(void* args){
+    pthread_mutex_lock(&mutex);
     _args* data = (_args *)args;
     _res* res = malloc(sizeof(_res));
     int rounds =  data->rounds;
@@ -32,7 +33,6 @@ void* roll_dice_model(void* args){
     int num_simulations = data->sim;
     int sum_wins_1 = 0;
     int sum_wins_2 = 0;
-
     for (int i = 0; i < num_simulations; i++)
     {
         long long sum1 = data->point_1;
@@ -53,6 +53,7 @@ void* roll_dice_model(void* args){
     res->sum_1 = sum_wins_1;
     res->sum_2 = sum_wins_2;
     res->sim= num_simulations;
+    pthread_mutex_unlock(&mutex);
     return (void*) res;
 }
 
@@ -109,7 +110,7 @@ int main(int  argc,char* argv[]){
     args->rounds= k - toure;
     pthread_t th[thread_count];
     pthread_mutex_init(&mutex, NULL);
-    for (int i = 0; i < thread_count; i++){
+    for (int i = 0; i < thread_count; i++){ 
         if (pthread_create(th + i, NULL,roll_dice_model, args) != 0){
             perror("Failed to create thread \n");
             return 4;
