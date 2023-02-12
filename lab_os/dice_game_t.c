@@ -10,7 +10,10 @@ pthread_mutex_t mutex;
 typedef struct{
     long long point_1;
     long long point_2;
+    int th_count;
     int rounds;
+    int last_sim;
+    int *index;
     int sim;
 } _args;
 
@@ -24,7 +27,6 @@ typedef struct
 
 
 void* roll_dice_model(void* args){
-    pthread_mutex_lock(&mutex);
     _args* data = (_args *)args;
     _res* res = malloc(sizeof(_res));
     int rounds =  data->rounds;
@@ -33,6 +35,8 @@ void* roll_dice_model(void* args){
     int num_simulations = data->sim;
     int sum_wins_1 = 0;
     int sum_wins_2 = 0;
+    if (data->th_count - *data->index == 1)
+        num_simulations += data->last_sim;
     for (int i = 0; i < num_simulations; i++)
     {
         long long sum1 = data->point_1;
@@ -89,6 +93,7 @@ int main(int  argc,char* argv[]){
     printf("Number of experiments: \n");
     scanf("%d",&total_sim);
     args->sim = total_sim / thread_count;
+    args->last_sim = total_sim % thread_count;
     if (k < toure){
         perror("The number of tours and/or the tour number are entered incorrectly\n");
         return 3;
@@ -108,9 +113,12 @@ int main(int  argc,char* argv[]){
     }
 
     args->rounds= k - toure;
+    args->th_count = thread_count;
     pthread_t th[thread_count];
     pthread_mutex_init(&mutex, NULL);
     for (int i = 0; i < thread_count; i++){ 
+        pthread_mutex_lock(&mutex);
+        args->index = &i;
         if (pthread_create(th + i, NULL,roll_dice_model, args) != 0){
             perror("Failed to create thread \n");
             return 4;
