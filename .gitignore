@@ -1,3 +1,4 @@
 *.file_chema.png
-*.prog
-*.dgt
+*prog
+*dgt
+thread_learning
