@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
-#include <errno.h>
+
 
 float summ (char *array)
 {    
@@ -26,8 +26,7 @@ float summ (char *array)
             str_size += 1;
             iter+=1;
         }
-        if (new_str  != NULL)
-        {
+        if (new_str  != NULL){
             number = atof(new_str);
             final_summ += number;
         }

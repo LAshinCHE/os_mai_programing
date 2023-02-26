@@ -1,8 +1,10 @@
-#include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdio.h>
-#include <errno.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
+#include <assert.h>
 
 float summ (char *array)
 {    
@@ -43,7 +45,6 @@ float summ (char *array)
 int data_to_string(char** str, int* str_buf, int* str_size){
 	char c;
     int res;
-    errno = 0;
 	
     char* new_str =  malloc(*str_buf * sizeof(char));
 
@@ -62,22 +63,27 @@ int data_to_string(char** str, int* str_buf, int* str_size){
     }
     new_str[*str_size] = '\0';
     if (res == -1)
-        return errno;
+        return -1;
     free(*str);
     *str = new_str;
     return 0;
 }
 
 
-int main(){
+int main(int argc,char* argv[]){
     int str_size = 0;
+    int alloc_memory_size = sizeof(float) * 1024;
     int str_buff = 1;
     char* new_str = NULL;
-    data_to_string(&new_str, &str_buff, &str_size);
+    assert(data_to_string(&new_str, &str_buff, &str_size) != -1);
     float res = summ(new_str);
-    printf ("%lf \n", res);
-	if ((write(STDOUT_FILENO, &res, sizeof(res)) == -1))
-		perror("write error");
-    
+    int file_message = open("msg.bin",O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+    assert(file_message != -1);
+    float* f_ptr = mmap(NULL,alloc_memory_size, 
+                    PROT_READ |PROT_WRITE , MAP_SHARED,
+                    file_message, 0);
+    assert(ftruncate(file_message,alloc_memory_size) != -1);
+    // как при помощи mmap передать на стандартный вход одной команды стандартный выхд другой
+    // и наоборот как со стандартного выхода одной программы предать данные другой
     return 0;
 }
