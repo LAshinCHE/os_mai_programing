@@ -1,15 +1,8 @@
-/**
- * Sample code for sharing memory between processes
- * Two processes will iteratively increase a counter which values stored in a shared memory
- * 
- */
-
-
 #include <stdio.h>
-#include <unistd.h> // for fork()
-#include <sys/mman.h> // for shared memory created
-#include <sys/stat.h> // for mode constants
-#include <fcntl.h> // for O_* constant
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h> 
+#include <fcntl.h> 
 #include <stdbool.h>
 #include <stdlib.h>
 #include <sys/wait.h>
@@ -24,7 +17,7 @@ typedef struct
 } message;
 
 bool write_message(float value){
-    int shmFd = shm_open(SHARED_OBJ_NAME, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    int shmFd = shm_open(SHARED_OBJ_NAME, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR); 
     assert(shmFd != -1);
     assert(ftruncate(shmFd, sizeof(message)) != -1);
     message *msg_ptr = (message*)mmap(NULL, sizeof(message), PROT_READ | PROT_WRITE, MAP_SHARED, shmFd, 0);
@@ -160,7 +153,7 @@ int main(int argc, char **argv)
         perror("forck errror!\n");
         return 3;
     }
-    //--- CHILD PROCESS
+    // CHILD PROCESS
     if (pid == 0){
         int str_size = 0;
         int str_buff = 1;
@@ -169,16 +162,18 @@ int main(int argc, char **argv)
         float sum_f = summ(new_str);
         assert(write_message(sum_f) != false);
     }
-    //--- PARENT PROCESS
+    //PARENT PROCESS
     else{
+        int statusChild1;
+        waitpid(pid, &statusChild1, 0);
 		float read_data = read_message();
         if (close(file)) {
             perror("close file error");
             return 5;
 		}	
         printf("[%d] Result from child: %f\n", getpid(), read_data);
+        shm_unlink(SHARED_OBJ_NAME);
     }
-    //shm_unlink(SHARED_OBJ_NAME);
 
     return 0;
 }
