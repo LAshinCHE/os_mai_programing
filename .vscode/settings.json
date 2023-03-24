@@ -4,6 +4,8 @@
         "mman.h": "c",
         "fcntl.h": "c",
         "wait.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "stdlib.h": "c",
+        "assert.h": "c"
     }
 }
