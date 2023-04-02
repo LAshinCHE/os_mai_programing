@@ -3,6 +3,8 @@
 #include <string.h>
 #include "RC.h"
 
+//gcc -Wall server.c  -o prog -L/usr/local/lib -lzmq
+//gcc -std=c99 -Wall test.c RC.c -o test -lm
 
 int main()
 {

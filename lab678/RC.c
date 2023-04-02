@@ -4,8 +4,6 @@
 
 #define CAPACITY 5000000
 
-//gcc -std=c99 -Wall test.c RC.c -o test -lm
-
 static long getHash(char* str,long left, long right) {
    	long hash = 0;
 	int p = 13;
