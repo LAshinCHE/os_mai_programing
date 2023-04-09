@@ -1,6 +1,8 @@
 #ifndef __RC_H__
 #define __RC_H__
 
+
+
 typedef struct 
 {
     int* data;
@@ -8,7 +10,10 @@ typedef struct
     int size;
 } nodeArray;
 
-enum NodeError {NodesWorckClearly  = 0, NodeInitError, AddNodeError, NodeExist, NodeDoesNotExist};
+
+enum NodeError {NodesWorckClearly  = 0, NodeInitError, AddNodeError, NodeExist, NodeDoesNotExist,NodeSuccessfullyDeleted, NodeDoesntDelet};
+
+
 
 int nodeArrayInint(nodeArray* nodes);
 int getSize(nodeArray* nodes);

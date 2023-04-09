@@ -1,7 +1,16 @@
-#include "RC.h"
-#include <math.h>
+#include <zmq.h>
 #include <string.h>
-
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h> 
+#include <fcntl.h> 
+#include <stdbool.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include<assert.h>
+#include <math.h>
+#include "nodeArray.h"
 #define CAPACITY 5000000
 
 static long getHash(char* str,long left, long right) {
@@ -23,10 +32,11 @@ long RC(char* str,char* sample){
 	{
 		long substringHash = getHash(str,pozition,sampleLen + pozition - 1);
 		if (substringHash == sampleHash){
+			printf("Searching '%s' in '%s' result = %ld  \n",str,sample, pozition);
 			return pozition;
 		}
 		
 	}
-	
+	printf("Searching '%s' in '%s' result = %d  \n",str,sample, -1);
 	return -1;
 }

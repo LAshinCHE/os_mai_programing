@@ -8,8 +8,8 @@
 
 int main()
 {
-    char str1[20] = "aaaab";
-    char str2[20] = "aaaaa";
+    char str1[20] = "aasdadasdasda";
+    char str2[20] = "asa";
     char str3[20] = "baaaaaa";
 
     long result1 = RC(str1,str2);
