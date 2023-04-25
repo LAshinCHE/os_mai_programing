@@ -235,6 +235,7 @@ int main(){
         }
         else if(strcmp (input, "quit") == 0){
             printf("Bye Bye\n");
+            return 0;
         }    
         else{
             printf("Wrong command!: '%s'\n",input);
